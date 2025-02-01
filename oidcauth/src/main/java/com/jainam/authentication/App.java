@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import java.net.URL;
 
@@ -49,8 +50,12 @@ public class App
 
         server.addConnector(httpsConnector);
 
-        ContextHandler context = new ContextHandler(new MainHandler(), "/auth");
-        server.setHandler(context);
+        ContextHandler context1 = new ContextHandler(new IndexPageHandler(), "/");
+        ContextHandler context2 = new ContextHandler(new MainHandler(), "/auth");
+
+        ContextHandlerCollection contexts = new ContextHandlerCollection(context1,context2);
+
+        server.setHandler(contexts);
 
         server.start();
         server.join();
